@@ -11,11 +11,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      street: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       number: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      complement: {
+      complements: {
         type: Sequelize.STRING,
         allowNull: true,
       },
@@ -28,7 +32,7 @@ module.exports = {
         allowNull: false,
       },
       postal_code: {
-        type: Sequelize.NUMBER,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       created_at: {
