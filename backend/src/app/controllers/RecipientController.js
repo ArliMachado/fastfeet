@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import Recipient from '../models/Recipients';
+import Recipient from '../models/Recipient';
 
 const recipientSchema = Yup.object().shape({
   name: Yup.string().required(),
