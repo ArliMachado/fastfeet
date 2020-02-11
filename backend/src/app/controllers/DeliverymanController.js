@@ -4,6 +4,21 @@ import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
 class DeliverymanController {
+  async index(req, res) {
+    const deliverers = await Deliveryman.findAll({
+      attributes: ['id', 'name', 'email'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
+
+    return res.json(deliverers);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -72,6 +87,20 @@ class DeliverymanController {
     });
 
     return res.json({ id, name, email, avatar });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const deliveryman = await Deliveryman.findByPk(id);
+
+    if (!deliveryman) {
+      return res.status(400).json({ error: 'Deliveryman not found' });
+    }
+
+    await deliveryman.destroy();
+
+    return res.json();
   }
 }
 
