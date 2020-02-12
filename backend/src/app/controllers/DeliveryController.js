@@ -1,5 +1,7 @@
 import * as Yup from 'yup';
 
+import Mail from '../../lib/Mail';
+
 import Delivery from '../models/Delivery';
 import File from '../models/File';
 import Recipient from '../models/Recipient';
@@ -82,6 +84,33 @@ class DeliveryController {
     }
 
     const delivery = await Delivery.create(req.body);
+
+    const {
+      name,
+      street,
+      number,
+      complements,
+      state,
+      city,
+      postal_code,
+    } = recipient;
+
+    await Mail.sendMail({
+      to: `${deliveryman.name} <${deliveryman.email}>`,
+      subject: 'Nova encomenda',
+      template: 'delivery',
+      context: {
+        deliveryman: deliveryman.name,
+        recipient: name,
+        street,
+        number,
+        complements,
+        state,
+        city,
+        postal_code,
+        product: req.body.product,
+      },
+    });
 
     return res.json(delivery);
   }
