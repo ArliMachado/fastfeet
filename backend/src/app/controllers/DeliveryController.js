@@ -50,7 +50,7 @@ class DeliveryController {
     const schema = Yup.object().shape({
       recipient_id: Yup.number().required(),
       deliveryman_id: Yup.number().required(),
-      signature_id: Yup.number().required(),
+      signature_id: Yup.number(),
       product: Yup.string().required(),
       canceled_at: Yup.date(),
       start_date: Yup.date(),
@@ -90,7 +90,7 @@ class DeliveryController {
     const schema = Yup.object().shape({
       recipient_id: Yup.number().required(),
       deliveryman_id: Yup.number().required(),
-      signature_id: Yup.number().required(),
+      signature_id: Yup.number(),
       product: Yup.string().required(),
       canceled_at: Yup.date(),
       start_date: Yup.date(),
