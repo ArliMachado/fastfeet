@@ -72,7 +72,7 @@ class DeliveryController {
     const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
     if (!deliveryman) {
-      return res.status(400).json({ error: 'Deliverymen not found' });
+      return res.status(400).json({ error: 'Deliveryman not found' });
     }
 
     const recipient = await Recipient.findByPk(recipient_id);
@@ -86,63 +86,67 @@ class DeliveryController {
     return res.json(delivery);
   }
 
-  // async update(req, res) {
-  //   const schema = Yup.object().shape({
-  //     name: Yup.string().required(),
-  //     email: Yup.string()
-  //       .email()
-  //       .required(),
-  //     avatar_id: Yup.number().required(),
-  //   });
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      recipient_id: Yup.number().required(),
+      deliveryman_id: Yup.number().required(),
+      signature_id: Yup.number().required(),
+      product: Yup.string().required(),
+      canceled_at: Yup.date(),
+      start_date: Yup.date(),
+      end_date: Yup.date(),
+    });
 
-  //   if (!(await schema.isValid(req.body))) {
-  //     return res.status(400).json({ error: 'Validation fails' });
-  //   }
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
 
-  //   const { avatar_id } = req.body;
+    const { id } = req.params;
 
-  //   const avatar = await File.findByPk(avatar_id);
+    const delivery = await Delivery.findByPk(id);
 
-  //   if (!avatar) {
-  //     return res.status(400).json({ error: 'Avatar not found' });
-  //   }
+    if (!delivery) {
+      return res.status(400).json({ error: 'Delivery not found' });
+    }
 
-  //   const { id } = req.params;
+    const { signature_id, deliveryman_id, recipient_id } = req.body;
 
-  //   const deliveryman = await Deliveryman.findByPk(id);
+    const signature = await File.findByPk(signature_id);
 
-  //   if (!deliveryman) {
-  //     return res.status(400).json({ error: 'Deliveryman not found' });
-  //   }
+    if (!signature) {
+      return res.status(400).json({ error: 'Signature not found' });
+    }
 
-  //   await deliveryman.update(req.body);
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
-  //   const { name, email } = await Deliveryman.findByPk(id, {
-  //     include: [
-  //       {
-  //         model: File,
-  //         as: 'avatar',
-  //         attributes: ['id', 'path', 'url'],
-  //       },
-  //     ],
-  //   });
+    if (!deliveryman) {
+      return res.status(400).json({ error: 'Deliveryman not found' });
+    }
 
-  //   return res.json({ id, name, email, avatar });
-  // }
+    const recipient = await Recipient.findByPk(recipient_id);
 
-  // async delete(req, res) {
-  //   const { id } = req.params;
+    if (!recipient) {
+      return res.status(400).json({ error: 'Recipient not found' });
+    }
 
-  //   const deliveryman = await Deliveryman.findByPk(id);
+    await delivery.update(req.body);
 
-  //   if (!deliveryman) {
-  //     return res.status(400).json({ error: 'Deliveryman not found' });
-  //   }
+    return res.json(delivery);
+  }
 
-  //   await deliveryman.destroy();
+  async delete(req, res) {
+    const { id } = req.params;
 
-  //   return res.json();
-  // }
+    const delivery = await Delivery.findByPk(id);
+
+    if (!delivery) {
+      return res.status(400).json({ error: 'Delivery not found' });
+    }
+
+    await delivery.destroy();
+
+    return res.json();
+  }
 }
 
 export default new DeliveryController();
